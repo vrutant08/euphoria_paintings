@@ -78,7 +78,6 @@ const RippleButton = ({ children, className, onClick, as: Component = 'button', 
 // Fluid text animation - each letter animates with wave effect
 const FluidText = ({ text }) => {
   const letters = text.split('')
-  const mobile = isMobile()
   
   return (
     <span className="fluid-text">
@@ -86,12 +85,12 @@ const FluidText = ({ text }) => {
         <motion.span
           key={index}
           className="fluid-letter"
-          animate={mobile ? {} : {
+          animate={{
             y: [0, -8, 0, 5, 0],
             rotateZ: [0, -2, 0, 2, 0],
             scaleY: [1, 1.05, 1, 0.98, 1],
           }}
-          transition={mobile ? {} : {
+          transition={{
             duration: 4,
             repeat: Infinity,
             delay: index * 0.15,
@@ -235,17 +234,6 @@ const Home = ({ setCommissionOpen }) => {
           }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
         />
-        <motion.div 
-          className="bg-ring bg-ring--1"
-          animate={{ 
-            rotate: 360,
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ 
-            rotate: { duration: 30, repeat: Infinity, ease: "linear" },
-            scale: { duration: 8, repeat: Infinity, ease: "easeInOut" }
-          }}
-        />
       </div>
 
       {/* Background Cards */}
@@ -256,7 +244,7 @@ const Home = ({ setCommissionOpen }) => {
         <div className="hero__content">
           {/* Main Title */}
           <h1 className="hero-title">
-            <span className="word"><FluidText text="Euphoria" /></span>{' '}
+            <span className="word"><FluidText text="Euphoria" /></span>
             <span className="word accent rotating-word-container">
               <AnimatePresence mode="wait">
                 <motion.span

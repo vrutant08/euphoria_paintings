@@ -84,15 +84,15 @@
   z-index: 1;
   overflow: hidden;
   
-  @media (max-width: 768px) {
-    display: none;
-  }
-  
   .particle {
     position: absolute;
     background: radial-gradient(circle, rgba($color-accent-gold, 1) 0%, rgba($color-accent-gold, 0.6) 40%, transparent 70%);
     border-radius: 50%;
     box-shadow: 0 0 15px rgba($color-accent-gold, 0.8), 0 0 30px rgba($color-accent-gold, 0.4);
+    
+    @media (max-width: 768px) {
+      box-shadow: 0 0 8px rgba($color-accent-gold, 0.6);
+    }
   }
 }
 
@@ -220,6 +220,16 @@
   padding: $spacing-sm $spacing-lg;
   transition: all $transition-base;
   z-index: 10;
+  
+  @media (max-width: 768px) {
+    position: fixed;
+    top: auto;
+    bottom: $spacing-xl;
+    right: $spacing-lg;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+  }
   
   .arrow {
     transition: transform $transition-base;

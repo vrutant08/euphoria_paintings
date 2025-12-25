@@ -64,15 +64,15 @@
   z-index: 1;
   overflow: hidden;
   
-  @media (max-width: 768px) {
-    display: none;
-  }
-  
   .particle {
     position: absolute;
     background: radial-gradient(circle, rgba($color-accent-gold, 1) 0%, rgba($color-accent-gold, 0.6) 40%, transparent 70%);
     border-radius: 50%;
     box-shadow: 0 0 15px rgba($color-accent-gold, 0.8), 0 0 30px rgba($color-accent-gold, 0.4);
+    
+    @media (max-width: 768px) {
+      box-shadow: 0 0 8px rgba($color-accent-gold, 0.6);
+    }
   }
 }
 
@@ -114,6 +114,16 @@
     border-radius: $border-radius-full;
     padding: $spacing-sm $spacing-lg;
     transition: all $transition-base;
+    
+    @media (max-width: 768px) {
+      position: fixed;
+      top: auto;
+      bottom: $spacing-xl;
+      right: $spacing-lg;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+    }
     
     .arrow {
       transition: transform $transition-base;
@@ -176,16 +186,16 @@
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: $spacing-3xl;
+  gap: $spacing-2xl;
   
   @include responsive(sm) {
     grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-3xl;
+    gap: $spacing-2xl;
   }
   
   @include responsive(lg) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-4xl;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-3xl;
   }
 }
 
@@ -199,18 +209,18 @@
     overflow: hidden;
     border-radius: $border-radius-lg;
     background: $color-bg-secondary;
-    min-height: 350px;
+    min-height: 280px;
     
     @include responsive(sm) {
-      min-height: 450px;
+      min-height: 320px;
     }
     
     @include responsive(md) {
-      min-height: 550px;
+      min-height: 380px;
     }
     
     @include responsive(lg) {
-      min-height: 600px;
+      min-height: 420px;
     }
     
     img {

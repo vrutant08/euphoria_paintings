@@ -100,17 +100,7 @@
 }
 
 .bg-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba($color-accent-gold, 0.2);
-  
-  &--1 {
-    top: 15%;
-    right: 10%;
-    width: 250px;
-    height: 250px;
-    border-style: dashed;
-  }
+  display: none; // Removed - was causing visual issues
 }
 
 .hero {
@@ -219,16 +209,28 @@
   font-family: $font-display;
   font-size: clamp(2.5rem, 8vw, 6rem);
   font-weight: 300;
-  line-height: 1.2;
+  line-height: 1.3;
   margin-bottom: $spacing-lg;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: clamp(2rem, 12vw, 3rem);
+    line-height: 1.2;
+  }
   
   .word {
-    display: inline-block;
+    display: block;
+    text-align: center;
+    
+    @media (max-width: 768px) {
+      margin: $spacing-xs 0;
+    }
   }
   
   // Fluid text animation
   .fluid-text {
     display: inline-block;
+    text-align: center;
     
     .fluid-letter {
       display: inline-block;
@@ -245,12 +247,10 @@
       -webkit-text-fill-color: transparent;
       animation: fluidGradient 6s ease infinite;
       
-      // Simplified for mobile - disable complex animations
+      // Simplified for mobile - reduce animations but keep color gradient
       @media (max-width: 768px) {
-        will-change: auto;
-        animation: none;
-        background: $color-accent-gold;
-        -webkit-text-fill-color: transparent;
+        will-change: transform;
+        animation: fluidGradient 8s ease infinite;
       }
     }
   }
@@ -262,25 +262,20 @@
   
   .rotating-word-container {
     position: relative;
-    display: inline-block;
-    min-width: 200px;
-    height: 1.2em;
+    display: block;
+    text-align: center;
+    height: 1.3em;
     overflow: hidden;
-    vertical-align: bottom;
-    
-    @include responsive(md) {
-      min-width: 300px;
-    }
-    
-    @include responsive(lg) {
-      min-width: 400px;
-    }
+    margin: 0 auto;
+    width: 100%;
   }
   
   .rotating-word {
     display: block;
     position: absolute;
+    width: 100%;
     left: 0;
+    text-align: center;
     white-space: nowrap;
   }
 }
