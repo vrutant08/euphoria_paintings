@@ -1,0 +1,133 @@
+@use '../../styles/variables' as *;
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: $z-menu;
+  @include flex-center;
+  overflow: hidden;
+  
+  &__backdrop {
+    @include absolute-fill;
+    background: rgba(10, 10, 10, 0.98);
+  }
+  
+  &__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: $spacing-xl;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  &__close {
+    position: absolute;
+    top: $spacing-xl;
+    right: $spacing-xl;
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    @include flex-center;
+    transition: all $transition-base;
+    
+    &:hover {
+      border-color: $color-text-primary;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .close-icon {
+      font-size: $font-size-2xl;
+      color: $color-text-primary;
+      line-height: 1;
+    }
+  }
+}
+
+.menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xl;
+}
+
+.menu-item {
+  overflow: hidden;
+}
+
+.menu-link {
+  position: relative;
+  display: inline-block;
+  padding: $spacing-xs 0;
+  
+  &__text {
+    font-family: $font-display;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 400;
+    color: $color-text-primary;
+    transition: color $transition-base;
+  }
+  
+  &__line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: $color-accent-gold;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform $transition-base;
+  }
+  
+  &:hover {
+    .menu-link__text {
+      color: $color-accent-gold;
+    }
+    
+    .menu-link__line {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+}
+
+.menu-footer {
+  &__divider {
+    width: 80px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 auto $spacing-xl;
+  }
+  
+  &__label {
+    font-size: $font-size-xs;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: $color-text-muted;
+    margin-bottom: $spacing-md;
+  }
+  
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-sm;
+    color: $color-accent-green;
+    transition: all $transition-base;
+    
+    .icon {
+      font-size: $font-size-base;
+    }
+    
+    &:hover {
+      color: #6aeb99;
+      transform: translateY(-2px);
+    }
+  }
+}

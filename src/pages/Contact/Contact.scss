@@ -1,0 +1,375 @@
+@use '../../styles/variables' as *;
+
+.contact {
+  min-height: 100vh;
+  background: $color-bg-primary;
+  padding: 120px 0 $spacing-4xl;
+  position: relative;
+  overflow: hidden;
+  
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $spacing-xl;
+    position: relative;
+    z-index: 2;
+    
+    @include responsive(lg) {
+      padding: 0 $spacing-2xl;
+    }
+  }
+  
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-3xl;
+    
+    @include responsive(lg) {
+      grid-template-columns: 1fr 1.2fr;
+      gap: $spacing-4xl;
+    }
+  }
+}
+
+// Accent circles
+.accent-circle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  
+  &--1 {
+    top: 20%;
+    right: 15%;
+    width: 300px;
+    height: 300px;
+    border: 2px solid rgba($color-accent-gold, 0.4);
+    box-shadow: 0 0 50px rgba($color-accent-gold, 0.2), inset 0 0 50px rgba($color-accent-gold, 0.1);
+    animation: pulseCircle 3s ease-in-out infinite;
+  }
+  
+  &--2 {
+    bottom: 25%;
+    left: 10%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.3) 0%, transparent 60%);
+    filter: blur(30px);
+  }
+}
+
+@keyframes pulseCircle {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+// Animated input styles
+.animated-input {
+  position: relative;
+  margin-bottom: $spacing-lg;
+  
+  label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    transform-origin: left center;
+  }
+  
+  input {
+    width: 100%;
+    padding: $spacing-md 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: $color-text-primary;
+    font-size: $font-size-base;
+    
+    &:focus {
+      outline: none;
+    }
+  }
+  
+  .input-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: $color-accent-gold;
+    transform-origin: left center;
+  }
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: $color-text-secondary;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $border-radius-full;
+  padding: $spacing-sm $spacing-lg;
+  position: absolute;
+  top: 0;
+  right: $spacing-xl;
+  transition: all $transition-base;
+  z-index: 10;
+  
+  @include responsive(lg) {
+    right: $spacing-2xl;
+  }
+  
+  .arrow {
+    transition: transform $transition-base;
+  }
+  
+  &:hover {
+    color: $color-text-primary;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    
+    .arrow {
+      transform: translateX(-4px);
+    }
+  }
+}
+
+.contact-info {
+  @include responsive(lg) {
+    position: sticky;
+    top: 120px;
+  }
+}
+
+.contact-title {
+  font-family: $font-display;
+  font-size: $font-size-4xl;
+  font-weight: 300;
+  margin-bottom: $spacing-xl;
+  
+  @include responsive(md) {
+    font-size: $font-size-5xl;
+  }
+  
+  .accent {
+    font-style: italic;
+    color: $color-accent-gold;
+  }
+}
+
+.contact-description {
+  font-size: $font-size-base;
+  line-height: 1.8;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-2xl;
+  max-width: 400px;
+  
+  @include responsive(md) {
+    font-size: $font-size-lg;
+  }
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-2xl;
+  
+  .detail-item {
+    display: flex;
+    gap: $spacing-md;
+    
+    .label {
+      font-size: $font-size-sm;
+      color: $color-text-muted;
+      min-width: 120px;
+    }
+    
+    .value {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      
+      &.available {
+        color: $color-accent-green;
+      }
+    }
+  }
+}
+
+.contact-links {
+  .links-label {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .email-link {
+    display: block;
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    margin-bottom: $spacing-lg;
+    transition: color $transition-base;
+    
+    &:hover {
+      color: $color-accent-gold;
+    }
+  }
+  
+  .social-links {
+    display: flex;
+    gap: $spacing-lg;
+    
+    a {
+      font-size: $font-size-sm;
+      color: $color-text-muted;
+      transition: color $transition-base;
+      
+      &:hover {
+        color: $color-text-primary;
+      }
+    }
+  }
+}
+
+.contact-form-wrapper {
+  background: $color-bg-secondary;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: $border-radius-xl;
+  padding: $spacing-2xl;
+  
+  @include responsive(md) {
+    padding: $spacing-3xl;
+  }
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-lg;
+  
+  @include responsive(sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  
+  label {
+    font-size: $font-size-xs;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: $color-text-muted;
+  }
+  
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: $spacing-md;
+    background: $color-bg-tertiary;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $border-radius-md;
+    font-family: $font-body;
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    transition: border-color $transition-base;
+    
+    &::placeholder {
+      color: $color-text-muted;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: $color-accent-gold;
+    }
+  }
+  
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $spacing-md center;
+    padding-right: $spacing-2xl;
+    
+    option {
+      background: $color-bg-tertiary;
+      color: $color-text-primary;
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  padding: $spacing-md $spacing-xl;
+  background: $color-text-primary;
+  color: $color-bg-primary;
+  font-family: $font-body;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: $border-radius-md;
+  margin-top: $spacing-md;
+  transition: all $transition-base;
+  
+  &:hover:not(:disabled) {
+    background: $color-accent-gold;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.success-message {
+  text-align: center;
+  padding: $spacing-4xl $spacing-xl;
+  
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: $color-success;
+    border-radius: 50%;
+    @include flex-center;
+    font-size: $font-size-3xl;
+    color: white;
+    margin: 0 auto $spacing-xl;
+  }
+  
+  h3 {
+    font-family: $font-display;
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-md;
+  }
+  
+  p {
+    color: $color-text-secondary;
+    margin-bottom: $spacing-2xl;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

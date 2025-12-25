@@ -1,0 +1,189 @@
+@use '../../styles/variables' as *;
+
+.commission-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $z-modal;
+  @include flex-center;
+  padding: $spacing-lg;
+  
+  &__backdrop {
+    @include absolute-fill;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+  }
+  
+  &__content {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    background: $color-bg-secondary;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $border-radius-xl;
+    padding: $spacing-2xl;
+    
+    @include responsive(md) {
+      padding: $spacing-3xl;
+    }
+  }
+  
+  &__close {
+    position: absolute;
+    top: $spacing-lg;
+    right: $spacing-lg;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    font-size: $font-size-2xl;
+    color: $color-text-muted;
+    @include flex-center;
+    transition: color $transition-base;
+    
+    &:hover {
+      color: $color-text-primary;
+    }
+  }
+  
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-2xl;
+  }
+}
+
+.commission-title {
+  font-family: $font-display;
+  font-size: $font-size-3xl;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: $spacing-sm;
+}
+
+.commission-subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+}
+
+.commission-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-lg;
+  
+  @include responsive(sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  
+  label {
+    font-size: $font-size-xs;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: $color-text-muted;
+  }
+  
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: $spacing-md;
+    background: $color-bg-tertiary;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $border-radius-md;
+    font-family: $font-body;
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    transition: border-color $transition-base;
+    
+    &::placeholder {
+      color: $color-text-muted;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: $color-accent-gold;
+    }
+  }
+  
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right $spacing-md center;
+    padding-right: $spacing-2xl;
+    
+    option {
+      background: $color-bg-tertiary;
+      color: $color-text-primary;
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  padding: $spacing-md $spacing-xl;
+  background: $color-text-primary;
+  color: $color-bg-primary;
+  font-family: $font-body;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: $border-radius-md;
+  margin-top: $spacing-md;
+  transition: all $transition-base;
+  
+  &:hover:not(:disabled) {
+    background: $color-accent-gold;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.commission-success {
+  text-align: center;
+  padding: $spacing-3xl $spacing-lg;
+  
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    background: $color-success;
+    border-radius: 50%;
+    @include flex-center;
+    font-size: $font-size-2xl;
+    color: white;
+    margin: 0 auto $spacing-xl;
+  }
+  
+  h3 {
+    font-family: $font-display;
+    font-size: $font-size-2xl;
+    margin-bottom: $spacing-sm;
+  }
+  
+  p {
+    color: $color-text-muted;
+  }
+}

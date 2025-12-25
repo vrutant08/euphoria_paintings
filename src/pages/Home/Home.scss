@@ -1,0 +1,238 @@
+@use '../../styles/variables' as *;
+
+.home {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero {
+  position: relative;
+  z-index: 50;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  
+  &__content {
+    text-align: center;
+    max-width: 800px;
+    padding: 0 $spacing-xl;
+    pointer-events: auto;
+    
+    // Glass background for readability
+    background: radial-gradient(
+      ellipse at center,
+      rgba($color-bg-primary, 0.9) 0%,
+      rgba($color-bg-primary, 0.7) 40%,
+      transparent 70%
+    );
+    padding: $spacing-4xl;
+    border-radius: 50%;
+  }
+  
+  &__social {
+    position: absolute;
+    bottom: $spacing-xl;
+    left: $spacing-xl;
+    display: flex;
+    gap: $spacing-lg;
+    pointer-events: auto;
+    
+    @include responsive(lg) {
+      bottom: $spacing-2xl;
+      left: $spacing-2xl;
+    }
+    
+    a {
+      font-size: $font-size-xs;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: $color-text-muted;
+      transition: color $transition-base;
+      
+      &:hover {
+        color: $color-text-primary;
+      }
+    }
+  }
+  
+  &__commission {
+    position: absolute;
+    bottom: $spacing-xl;
+    right: $spacing-xl;
+    text-align: right;
+    pointer-events: auto;
+    
+    @include responsive(lg) {
+      bottom: $spacing-2xl;
+      right: $spacing-2xl;
+    }
+    
+    .label {
+      display: block;
+      font-size: $font-size-xs;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: $color-text-muted;
+      margin-bottom: $spacing-xs;
+    }
+    
+    .commission-link {
+      font-size: $font-size-sm;
+      font-weight: 500;
+      color: $color-accent-green;
+      background: none;
+      border: none;
+      padding: 0;
+      transition: color $transition-base;
+      
+      &:hover {
+        color: #7df3a8;
+      }
+    }
+  }
+}
+
+.hero-title {
+  font-family: $font-display;
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  font-weight: 300;
+  line-height: 1.2;
+  margin-bottom: $spacing-lg;
+  
+  .word {
+    display: inline-block;
+  }
+  
+  // Fluid text animation
+  .fluid-text {
+    display: inline-block;
+    
+    .fluid-letter {
+      display: inline-block;
+      will-change: transform;
+      background: linear-gradient(
+        135deg, 
+        $color-text-primary 0%, 
+        $color-accent-gold 50%, 
+        $color-text-primary 100%
+      );
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fluidGradient 6s ease infinite;
+    }
+  }
+  
+  .accent {
+    font-style: italic;
+    color: $color-accent-gold;
+  }
+  
+  .rotating-word-container {
+    position: relative;
+    display: inline-block;
+    min-width: 200px;
+    height: 1.2em;
+    overflow: hidden;
+    vertical-align: bottom;
+    
+    @include responsive(md) {
+      min-width: 300px;
+    }
+    
+    @include responsive(lg) {
+      min-width: 400px;
+    }
+  }
+  
+  .rotating-word {
+    display: block;
+    position: absolute;
+    left: 0;
+    white-space: nowrap;
+  }
+}
+
+// Reactive orbs that follow mouse
+.reactive-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+  opacity: 0.6;
+  z-index: 1;
+  
+  &--1 {
+    width: 500px;
+    height: 500px;
+    top: 20%;
+    left: 20%;
+    background: radial-gradient(circle, $color-accent-gold 0%, transparent 60%);
+  }
+  
+  &--2 {
+    width: 400px;
+    height: 400px;
+    bottom: 20%;
+    right: 20%;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.8) 0%, transparent 60%);
+  }
+}
+
+@keyframes fluidGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.hero-subtitle {
+  font-family: $font-body;
+  font-size: $font-size-base;
+  font-weight: 300;
+  color: $color-text-secondary;
+  max-width: 500px;
+  margin: 0 auto $spacing-2xl;
+  line-height: 1.8;
+  
+  @include responsive(md) {
+    font-size: $font-size-lg;
+  }
+}
+
+.hero-cta {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  align-items: center;
+  
+  @include responsive(sm) {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .btn {
+    min-width: 180px;
+  }
+}
+
+// Animations for text reveal
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

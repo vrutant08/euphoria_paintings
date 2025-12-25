@@ -1,0 +1,31 @@
+@use '../../styles/variables' as *;
+
+.cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: $z-cursor;
+  border-radius: 50%;
+  mix-blend-mode: difference;
+  
+  &.hidden {
+    opacity: 0;
+  }
+  
+  &--dot {
+    width: 8px;
+    height: 8px;
+    background: $color-text-primary;
+  }
+  
+  &--ring {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+  }
+  
+  // Hide on touch devices
+  @media (hover: none) {
+    display: none;
+  }
+}

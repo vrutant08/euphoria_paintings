@@ -1,0 +1,221 @@
+@use '../../styles/variables' as *;
+
+.diagonal-cards {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: $z-cards;
+  
+  // Fade overlays for top and bottom
+  &__fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 25%;
+    z-index: 20;
+    pointer-events: none;
+    
+    &--top {
+      top: 0;
+      background: linear-gradient(
+        to bottom,
+        $color-bg-primary 0%,
+        rgba($color-bg-primary, 0.8) 30%,
+        rgba($color-bg-primary, 0) 100%
+      );
+    }
+    
+    &--bottom {
+      bottom: 0;
+      background: linear-gradient(
+        to top,
+        $color-bg-primary 0%,
+        rgba($color-bg-primary, 0.8) 30%,
+        rgba($color-bg-primary, 0) 100%
+      );
+    }
+  }
+  
+  &__wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: $spacing-lg;
+    height: 150vh;
+    padding: 0 $spacing-lg;
+    
+    @include responsive(md) {
+      gap: $spacing-xl;
+    }
+    
+    @include responsive(lg) {
+      gap: $spacing-2xl;
+    }
+  }
+}
+
+.diagonal-column {
+  position: relative;
+  width: 280px;
+  height: 100%;
+  overflow: hidden;
+  
+  @include responsive(sm) {
+    width: 340px;
+  }
+  
+  @include responsive(md) {
+    width: 400px;
+  }
+  
+  @include responsive(lg) {
+    width: 450px;
+  }
+  
+  @include responsive(xl) {
+    width: 500px;
+  }
+  
+  &--left {
+    transform: rotate(-12deg) translateY(-10%);
+  }
+  
+  &--center {
+    transform: rotate(-12deg) translateY(5%);
+    z-index: 2;
+  }
+  
+  &--right {
+    transform: rotate(-12deg) translateY(-5%);
+  }
+  
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+    
+    @include responsive(md) {
+      gap: $spacing-xl;
+    }
+  }
+}
+
+.diagonal-card {
+  flex-shrink: 0;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-lg;
+  transition: transform $transition-base, box-shadow $transition-base;
+  
+  &:hover {
+    transform: scale(1.03);
+    box-shadow: $shadow-xl;
+    z-index: 10;
+    
+    .diagonal-card__overlay {
+      opacity: 1;
+    }
+    
+    .diagonal-card__image-wrapper img {
+      transform: scale(1.1);
+    }
+  }
+  
+  &__image-wrapper {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform $transition-slow;
+    }
+  }
+  
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba($color-accent-gold, 0.1) 0%, rgba($color-bg-secondary, 0.8) 100%);
+    border: 2px dashed rgba($color-accent-gold, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    
+    .placeholder-icon {
+      font-size: 3rem;
+      opacity: 0.5;
+    }
+    
+    .placeholder-text {
+      font-size: $font-size-sm;
+      color: $color-text-muted;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+  }
+  
+  &__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: $spacing-lg;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    opacity: 0;
+    transition: opacity $transition-base;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+  
+  &__title {
+    font-family: $font-display;
+    font-size: $font-size-lg;
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+  
+  &__category {
+    font-size: $font-size-xs;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $color-accent-gold;
+  }
+}
+
+// Responsive adjustments for mobile
+@media (max-width: $breakpoint-sm) {
+  .diagonal-cards__wrapper {
+    gap: $spacing-sm;
+  }
+  
+  .diagonal-column {
+    width: 180px;
+    
+    &--left {
+      transform: rotate(-8deg) translateY(-10%);
+    }
+    
+    &--center {
+      transform: rotate(-8deg) translateY(5%);
+    }
+    
+    &--right {
+      transform: rotate(-8deg) translateY(-5%);
+    }
+  }
+}

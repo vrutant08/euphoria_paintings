@@ -1,0 +1,296 @@
+@use '../../styles/variables' as *;
+
+.gallery {
+  min-height: 100vh;
+  background: $color-bg-primary;
+  padding: 120px 0 $spacing-4xl;
+  position: relative;
+  overflow: hidden;
+  
+  &__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 $spacing-xl;
+    position: relative;
+    z-index: 2;
+    
+    @include responsive(lg) {
+      padding: 0 $spacing-2xl;
+    }
+  }
+}
+
+// Animated background lines
+.gallery-bg-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gallery-line {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(
+    90deg, 
+    transparent 0%, 
+    rgba($color-accent-gold, 0.6) 50%, 
+    transparent 100%
+  );
+  transform-origin: left center;
+  box-shadow: 0 0 20px rgba($color-accent-gold, 0.3);
+  
+  &--1 {
+    top: 30%;
+    left: 0;
+    width: 100%;
+  }
+  
+  &--2 {
+    top: 55%;
+    left: 0;
+    width: 70%;
+    animation: linePulse 4s ease-in-out infinite;
+  }
+  
+  &--3 {
+    top: 80%;
+    left: 20%;
+    width: 80%;
+    animation: linePulse 3s ease-in-out infinite 1s;
+  }
+}
+
+@keyframes linePulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(2); }
+}
+
+// Cursor-following spotlight
+.cursor-spotlight {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle, 
+    rgba($color-accent-gold, 0.15) 0%, 
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-3xl;
+  
+  &__text {
+    .gallery-title {
+      font-family: $font-display;
+      font-size: $font-size-5xl;
+      font-weight: 300;
+      margin-bottom: $spacing-sm;
+      
+      @include responsive(md) {
+        font-size: $font-size-6xl;
+      }
+    }
+    
+    .gallery-subtitle {
+      font-size: $font-size-sm;
+      color: $color-accent-gold;
+      letter-spacing: 0.1em;
+    }
+  }
+  
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: $color-text-secondary;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $border-radius-full;
+    padding: $spacing-sm $spacing-lg;
+    transition: all $transition-base;
+    
+    .arrow {
+      transition: transform $transition-base;
+    }
+    
+    &:hover {
+      color: $color-text-primary;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      
+      .arrow {
+        transform: translateX(-4px);
+      }
+    }
+  }
+}
+
+.gallery-filter {
+  display: flex;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+  padding-bottom: $spacing-lg;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  
+  @include responsive(md) {
+    gap: $spacing-xl;
+  }
+  
+  .filter-btn {
+    position: relative;
+    font-size: $font-size-sm;
+    font-weight: 400;
+    color: $color-text-muted;
+    padding: $spacing-sm 0;
+    background: none;
+    border: none;
+    white-space: nowrap;
+    transition: color $transition-base;
+    
+    &:hover {
+      color: $color-text-secondary;
+    }
+    
+    &.active {
+      color: $color-text-primary;
+    }
+    
+    .filter-underline {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: $color-accent-gold;
+    }
+  }
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: $spacing-xl;
+  
+  @include responsive(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include responsive(lg) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-2xl;
+  }
+}
+
+.gallery-card {
+  position: relative;
+  cursor: pointer;
+  
+  &__image {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: $border-radius-lg;
+    background: $color-bg-secondary;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform $transition-slow;
+    }
+    
+    &:hover img {
+      transform: scale(1.08);
+    }
+  }
+  
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba($color-accent-gold, 0.1) 0%, rgba($color-bg-secondary, 0.9) 100%);
+    border: 2px dashed rgba($color-accent-gold, 0.3);
+    border-radius: $border-radius-lg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-md;
+    transition: all $transition-base;
+    
+    .placeholder-icon {
+      font-size: 3rem;
+      opacity: 0.6;
+    }
+    
+    .placeholder-text {
+      font-size: $font-size-sm;
+      color: $color-text-muted;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    
+    &:hover {
+      border-color: rgba($color-accent-gold, 0.5);
+      background: linear-gradient(135deg, rgba($color-accent-gold, 0.15) 0%, rgba($color-bg-secondary, 0.95) 100%);
+    }
+  }
+  
+  &__overlay {
+    @include absolute-fill;
+    background: rgba(0, 0, 0, 0.5);
+    @include flex-center;
+    
+    .overlay-content {
+      text-align: center;
+    }
+    
+    .view-text {
+      display: inline-block;
+      padding: $spacing-sm $spacing-xl;
+      font-size: $font-size-sm;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: $color-text-primary;
+      border: 1px solid $color-text-primary;
+      border-radius: $border-radius-full;
+    }
+  }
+  
+  &__info {
+    padding: $spacing-lg 0;
+  }
+  
+  .card-title {
+    font-family: $font-display;
+    font-size: $font-size-xl;
+    font-weight: 400;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .card-meta {
+    display: flex;
+    gap: $spacing-md;
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    
+    .card-category {
+      text-transform: capitalize;
+    }
+  }
+}
