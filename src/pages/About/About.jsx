@@ -1,9 +1,50 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
 import { artistInfo } from '../../data/artworks'
 import './About.scss'
+
+// Floating particles component - memoized to prevent re-renders on mouse move
+const FloatingParticles = memo(() => {
+  const particles = Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 10 + 6, // Bigger particles (6-16px)
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: Math.random() * 15 + 10,
+    delay: Math.random() * 3
+  }))
+  
+  return (
+    <div className="floating-particles">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="particle"
+          style={{
+            width: particle.size,
+            height: particle.size,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
+          animate={{
+            y: [0, -50, 0],
+            x: [0, 25, -25, 0],
+            opacity: [0.4, 0.9, 0.4],
+            scale: [1, 1.5, 1]
+          }}
+          transition={{
+            duration: particle.duration,
+            repeat: Infinity,
+            delay: particle.delay,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+    </div>
+  )
+})
 
 // Parallax image component
 const ParallaxImage = ({ src, alt }) => {
@@ -88,45 +129,55 @@ const About = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Reactive floating shapes */}
-      <motion.div 
-        className="floating-shape floating-shape--1"
-        animate={{
-          x: mousePos.x * 20,
-          y: mousePos.y * 20,
-          rotate: mousePos.x * 5
-        }}
-        transition={{ type: "spring", stiffness: 50, damping: 20 }}
-      />
-      <motion.div 
-        className="floating-shape floating-shape--2"
-        animate={{
-          x: mousePos.x * -30,
-          y: mousePos.y * -30,
-          rotate: mousePos.y * -8
-        }}
-        transition={{ type: "spring", stiffness: 40, damping: 25 }}
-      />
-      <motion.div 
-        className="floating-shape floating-shape--3"
-        animate={{
-          x: mousePos.x * 15,
-          y: mousePos.y * -20,
-        }}
-        transition={{ type: "spring", stiffness: 60, damping: 15 }}
-      />
-      
+      {/* Floating Particles */}
+      <FloatingParticles />
+
+      {/* Animated background decorations */}
+      <div className="about-bg-decor">
+        <motion.div 
+          className="about-orb about-orb--1"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="about-orb about-orb--2"
+          animate={{ 
+            scale: [1, 1.15, 1],
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <motion.div 
+          className="about-line about-line--1"
+          animate={{ 
+            scaleX: [0.4, 1, 0.4],
+            opacity: [0.2, 0.5, 0.2]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="about-ring about-ring--1"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+
       <div className="about__container">
-        {/* Back Link */}
-        <motion.button 
-          onClick={() => navigate('/')} 
-          className="back-link"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="arrow">←</span>
-          <span>BACK</span>
-        </motion.button>
+        {/* Header with Back Link */}
+        <div className="about__header">
+          <motion.button 
+            onClick={() => navigate('/')} 
+            className="back-link"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="arrow">←</span>
+            <span>BACK</span>
+          </motion.button>
+        </div>
 
         <div className="about__grid">
           {/* Image Section */}
@@ -139,6 +190,17 @@ const About = () => {
 
           {/* Content Section */}
           <div className="about-content">
+            {/* Back button positioned here */}
+            <motion.button 
+              onClick={() => navigate('/')} 
+              className="back-link-content"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="arrow">←</span>
+              <span>BACK</span>
+            </motion.button>
+
             <motion.h1 
               className="about-title"
               initial={{ opacity: 0, y: 30 }}
@@ -249,6 +311,7 @@ const About = () => {
         </div>
       </div>
     </motion.div>
+    
   )
 }
 

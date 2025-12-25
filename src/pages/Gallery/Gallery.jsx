@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
@@ -41,9 +41,106 @@ const MagneticElement = ({ children, className }) => {
   )
 }
 
+// Lightbox Component
+const Lightbox = ({ artwork, onClose }) => {
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleEscape)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [onClose])
+
+  return (
+    <motion.div 
+      className="lightbox"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div 
+        className="lightbox__content"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="lightbox__close" onClick={onClose}>×</button>
+        <div className="lightbox__image">
+          {artwork.image ? (
+            <img src={artwork.image} alt={artwork.title} />
+          ) : (
+            <div className="lightbox__placeholder">
+              <span className="placeholder-icon">🎨</span>
+              <span className="placeholder-text">Artwork Coming Soon</span>
+            </div>
+          )}
+        </div>
+        <div className="lightbox__info">
+          <h2>{artwork.title}</h2>
+          <div className="lightbox__meta">
+            <span className="category">{artwork.category}</span>
+            <span className="year">{artwork.year}</span>
+          </div>
+          {artwork.description && <p className="description">{artwork.description}</p>}
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+// Floating particles component - memoized to prevent re-renders on mouse move
+const FloatingParticles = memo(() => {
+  const particles = Array.from({ length: 35 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 10 + 6, // Bigger particles (6-16px)
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: Math.random() * 15 + 10,
+    delay: Math.random() * 3
+  }))
+  
+  return (
+    <div className="floating-particles">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="particle"
+          style={{
+            width: particle.size,
+            height: particle.size,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
+          animate={{
+            y: [0, -50, 0],
+            x: [0, 25, -25, 0],
+            opacity: [0.4, 0.9, 0.4],
+            scale: [1, 1.5, 1]
+          }}
+          transition={{
+            duration: particle.duration,
+            repeat: Infinity,
+            delay: particle.delay,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+    </div>
+  )
+})
+
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState('all')
   const [hoveredCard, setHoveredCard] = useState(null)
+  const [clickedCard, setClickedCard] = useState(null)
+  const [selectedArtwork, setSelectedArtwork] = useState(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const galleryRef = useRef(null)
   const navigate = useNavigate()
@@ -107,6 +204,14 @@ const Gallery = () => {
     }
   }
 
+  const handleCardClick = (artwork) => {
+    setClickedCard(artwork.id)
+    setTimeout(() => {
+      setSelectedArtwork(artwork)
+      setClickedCard(null)
+    }, 300)
+  }
+
   return (
     <motion.div
       className="gallery"
@@ -116,23 +221,55 @@ const Gallery = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Animated background lines */}
-      <div className="gallery-bg-lines">
-        <div className="gallery-line gallery-line--1"></div>
-        <div className="gallery-line gallery-line--2"></div>
-        <div className="gallery-line gallery-line--3"></div>
+      {/* Floating Particles */}
+      <FloatingParticles />
+
+      {/* Background decorative elements */}
+      <div className="gallery-bg-decor">
+        <motion.div 
+          className="decor-circle decor-circle--1"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="decor-circle decor-circle--2"
+          animate={{ 
+            scale: [1, 1.15, 1],
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div 
+          className="decor-line decor-line--1"
+          animate={{ 
+            scaleX: [0.5, 1, 0.5],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="decor-line decor-line--2"
+          animate={{ 
+            scaleX: [0.6, 1, 0.6],
+            opacity: [0.2, 0.5, 0.2]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
       </div>
-      
-      {/* Cursor-following spotlight */}
-      <motion.div 
-        className="cursor-spotlight"
-        animate={{
-          x: mousePos.x - 200,
-          y: mousePos.y - 200,
-        }}
-        transition={{ type: "spring", stiffness: 30, damping: 20 }}
-      />
-      
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {selectedArtwork && (
+          <Lightbox 
+            artwork={selectedArtwork} 
+            onClose={() => setSelectedArtwork(null)} 
+          />
+        )}
+      </AnimatePresence>
+
       <div className="gallery__container">
         {/* Header */}
         <header className="gallery-header">
@@ -197,12 +334,14 @@ const Gallery = () => {
             {filteredArtworks.map((artwork) => (
               <motion.article
                 key={artwork.id}
-                className="gallery-card"
+                className={`gallery-card ${clickedCard === artwork.id ? 'clicked' : ''}`}
                 variants={itemVariants}
                 layout
                 onMouseEnter={() => setHoveredCard(artwork.id)}
                 onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => handleCardClick(artwork)}
                 whileHover={{ y: -8 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <div className="gallery-card__image">
                   {artwork.image ? (
@@ -223,10 +362,31 @@ const Gallery = () => {
                     animate={{ opacity: hoveredCard === artwork.id ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div className="overlay-content">
+                    <motion.div 
+                      className="overlay-content"
+                      initial={{ scale: 0, rotate: -10 }}
+                      animate={{ 
+                        scale: hoveredCard === artwork.id ? 1 : 0,
+                        rotate: hoveredCard === artwork.id ? 0 : -10
+                      }}
+                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    >
                       <span className="view-text">View</span>
-                    </div>
+                    </motion.div>
                   </motion.div>
+                  
+                  {/* Click ripple effect */}
+                  <AnimatePresence>
+                    {clickedCard === artwork.id && (
+                      <motion.div 
+                        className="click-ripple"
+                        initial={{ scale: 0, opacity: 1 }}
+                        animate={{ scale: 3, opacity: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4 }}
+                      />
+                    )}
+                  </AnimatePresence>
                 </div>
                 
                 <div className="gallery-card__info">

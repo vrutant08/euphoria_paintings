@@ -7,6 +7,13 @@
   border-radius: 50%;
   mix-blend-mode: difference;
   
+  // Hide on mobile/touch devices
+  @media (max-width: 768px), (hover: none), (pointer: coarse) {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  
   &.hidden {
     opacity: 0;
   }
@@ -22,10 +29,5 @@
     height: 40px;
     border: 1px solid rgba(255, 255, 255, 0.5);
     background: transparent;
-  }
-  
-  // Hide on touch devices
-  @media (hover: none) {
-    display: none;
   }
 }

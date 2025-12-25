@@ -15,7 +15,7 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, setCommissionOpen }) => {
         {/* Social Links - Left */}
         <div className="navigation__social">
           <a 
-            href="https://instagram.com/euphoriapaintings" 
+            href="https://instagram.com/euphoria_paintings" 
             target="_blank" 
             rel="noopener noreferrer"
             className="social-link"
@@ -23,7 +23,7 @@ const Navigation = ({ isMenuOpen, setIsMenuOpen, setCommissionOpen }) => {
             INSTAGRAM
           </a>
           <a 
-            href="https://artstation.com/euphoriapaintings" 
+            href="https://artstation.com/euphoria_paintings" 
             target="_blank" 
             rel="noopener noreferrer"
             className="social-link"

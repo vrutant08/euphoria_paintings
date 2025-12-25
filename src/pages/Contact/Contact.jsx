@@ -92,24 +92,39 @@ const Contact = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Floating accent circles */}
-      <motion.div 
-        className="accent-circle accent-circle--1"
-        animate={{
-          x: mousePos.x * 40,
-          y: mousePos.y * 40,
-        }}
-        transition={{ type: "spring", stiffness: 30, damping: 15 }}
-      />
-      <motion.div 
-        className="accent-circle accent-circle--2"
-        animate={{
-          x: mousePos.x * -25,
-          y: mousePos.y * -25,
-        }}
-        transition={{ type: "spring", stiffness: 40, damping: 20 }}
-      />
-      
+      {/* Animated background decorations */}
+      <div className="contact-bg-decor">
+        <motion.div 
+          className="contact-orb contact-orb--1"
+          animate={{ 
+            scale: [1, 1.25, 1],
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="contact-orb contact-orb--2"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.15, 0.35, 0.15]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+        />
+        <motion.div 
+          className="contact-line contact-line--1"
+          animate={{ 
+            scaleX: [0.3, 1, 0.3],
+            opacity: [0.2, 0.5, 0.2]
+          }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="contact-ring contact-ring--1"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+
       <div className="contact__container">
         {/* Back Link */}
         <motion.button 

@@ -7,6 +7,39 @@
   position: relative;
   overflow: hidden;
   
+  // Subtle background gradients
+  &::before {
+    content: '';
+    position: fixed;
+    top: 20%;
+    right: -15%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
+  &::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    left: -20%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
   &__container {
     max-width: 1200px;
     margin: 0 auto;
@@ -29,38 +62,6 @@
       gap: $spacing-4xl;
     }
   }
-}
-
-// Accent circles
-.accent-circle {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-  
-  &--1 {
-    top: 20%;
-    right: 15%;
-    width: 300px;
-    height: 300px;
-    border: 2px solid rgba($color-accent-gold, 0.4);
-    box-shadow: 0 0 50px rgba($color-accent-gold, 0.2), inset 0 0 50px rgba($color-accent-gold, 0.1);
-    animation: pulseCircle 3s ease-in-out infinite;
-  }
-  
-  &--2 {
-    bottom: 25%;
-    left: 10%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba($color-accent-gold, 0.3) 0%, transparent 60%);
-    filter: blur(30px);
-  }
-}
-
-@keyframes pulseCircle {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.1); opacity: 0.8; }
 }
 
 // Animated input styles
@@ -371,5 +372,70 @@
     max-width: 300px;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+// Animated background decorations
+.contact-bg-decor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.contact-orb {
+  position: absolute;
+  border-radius: 50%;
+  
+  &--1 {
+    top: 5%;
+    right: -10%;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.15) 0%, transparent 60%);
+    filter: blur(80px);
+  }
+  
+  &--2 {
+    bottom: 10%;
+    left: -15%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.12) 0%, transparent 60%);
+    filter: blur(70px);
+  }
+}
+
+.contact-line {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba($color-accent-gold, 0.5), transparent);
+  
+  &--1 {
+    top: 40%;
+    left: 0;
+    width: 25%;
+    transform-origin: left;
+  }
+}
+
+.contact-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba($color-accent-gold, 0.15);
+  
+  &--1 {
+    top: 20%;
+    right: 10%;
+    width: 180px;
+    height: 180px;
   }
 }

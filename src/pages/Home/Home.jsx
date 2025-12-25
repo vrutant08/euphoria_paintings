@@ -1,4 +1,4 @@
-import { useEffect, useRef, useLayoutEffect, useState } from 'react'
+import { useEffect, useRef, useLayoutEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { gsap } from 'gsap'
@@ -8,9 +8,77 @@ import './Home.scss'
 
 const rotatingWords = ['Paintings', 'Welcomes You', 'Creations', 'Dreams']
 
+// Detect if device is mobile/touch
+const isMobile = () => {
+  return window.matchMedia('(max-width: 768px)').matches || 
+         window.matchMedia('(hover: none)').matches ||
+         window.matchMedia('(pointer: coarse)').matches
+}
+
+// Ripple Button component with water ripple effect
+const RippleButton = ({ children, className, onClick, as: Component = 'button', to, ...props }) => {
+  const buttonRef = useRef(null)
+  
+  const createRipple = useCallback((e) => {
+    const button = buttonRef.current
+    if (!button) return
+    
+    const rect = button.getBoundingClientRect()
+    const size = Math.max(rect.width, rect.height)
+    const x = e.clientX - rect.left - size / 2
+    const y = e.clientY - rect.top - size / 2
+    
+    const ripple = document.createElement('span')
+    ripple.style.cssText = `
+      position: absolute;
+      width: ${size}px;
+      height: ${size}px;
+      left: ${x}px;
+      top: ${y}px;
+      background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,107,157,0.3) 50%, transparent 70%);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: waterRipple 0.8s ease-out forwards;
+      pointer-events: none;
+    `
+    
+    button.appendChild(ripple)
+    
+    setTimeout(() => ripple.remove(), 800)
+    
+    if (onClick) onClick(e)
+  }, [onClick])
+  
+  if (Component === Link || to) {
+    return (
+      <Link 
+        ref={buttonRef}
+        to={to}
+        className={`ripple-btn ${className}`}
+        onClick={createRipple}
+        {...props}
+      >
+        {children}
+      </Link>
+    )
+  }
+  
+  return (
+    <button 
+      ref={buttonRef}
+      className={`ripple-btn ${className}`}
+      onClick={createRipple}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
+
 // Fluid text animation - each letter animates with wave effect
 const FluidText = ({ text }) => {
   const letters = text.split('')
+  const mobile = isMobile()
   
   return (
     <span className="fluid-text">
@@ -18,12 +86,12 @@ const FluidText = ({ text }) => {
         <motion.span
           key={index}
           className="fluid-letter"
-          animate={{
+          animate={mobile ? {} : {
             y: [0, -8, 0, 5, 0],
             rotateZ: [0, -2, 0, 2, 0],
             scaleY: [1, 1.05, 1, 0.98, 1],
           }}
-          transition={{
+          transition={mobile ? {} : {
             duration: 4,
             repeat: Infinity,
             delay: index * 0.15,
@@ -131,29 +199,60 @@ const Home = ({ setCommissionOpen }) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Animated background decorations */}
+      <div className="home-bg-decor">
+        <motion.div 
+          className="bg-orb bg-orb--1"
+          animate={{ 
+            scale: [1, 1.3, 1],
+            x: [0, 30, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="bg-orb bg-orb--2"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            x: [0, -40, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <motion.div 
+          className="bg-line bg-line--1"
+          animate={{ 
+            scaleX: [0.3, 1, 0.3],
+            opacity: [0.2, 0.6, 0.2]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="bg-line bg-line--2"
+          animate={{ 
+            scaleX: [0.5, 1, 0.5],
+            opacity: [0.3, 0.5, 0.3]
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+        />
+        <motion.div 
+          className="bg-ring bg-ring--1"
+          animate={{ 
+            rotate: 360,
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            rotate: { duration: 30, repeat: Infinity, ease: "linear" },
+            scale: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+          }}
+        />
+      </div>
+
       {/* Background Cards */}
       <DiagonalCards />
 
       {/* Hero Content Overlay */}
       <div className="hero" ref={heroTextRef}>
-        {/* Reactive gradient orbs */}
-        <motion.div 
-          className="reactive-orb reactive-orb--1"
-          animate={{
-            x: mousePosition.x * 30,
-            y: mousePosition.y * 30,
-          }}
-          transition={{ type: "spring", stiffness: 50, damping: 20 }}
-        />
-        <motion.div 
-          className="reactive-orb reactive-orb--2"
-          animate={{
-            x: mousePosition.x * -40,
-            y: mousePosition.y * -40,
-          }}
-          transition={{ type: "spring", stiffness: 40, damping: 25 }}
-        />
-        
         <div className="hero__content">
           {/* Main Title */}
           <h1 className="hero-title">
@@ -184,15 +283,15 @@ const Home = ({ setCommissionOpen }) => {
 
           {/* CTA Buttons */}
           <div className="hero-cta">
-            <Link to="/gallery" className="btn btn--primary">
+            <RippleButton to="/gallery" className="btn btn--primary">
               View Portfolio
-            </Link>
-            <button 
+            </RippleButton>
+            <RippleButton 
               className="btn btn--secondary"
               onClick={() => setCommissionOpen(true)}
             >
               Request Commission
-            </button>
+            </RippleButton>
           </div>
         </div>
 

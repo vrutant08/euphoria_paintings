@@ -102,7 +102,7 @@ export const artistInfo = {
   tools: ["Procreate", "Photoshop", "Blender 3D", "Traditional Oil"],
   social: {
     instagram: "https://instagram.com/euphoria_paintings",
-    artstation: "https://artstation.com/euphoriapaintings",
+    artstation: "https://artstation.com/euphoria_paintings",
     twitter: "https://twitter.com/euphoriapaint"
   }
 }

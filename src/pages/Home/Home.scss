@@ -5,6 +5,112 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  
+  // Subtle background gradients - desktop only
+  &::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+  
+  &::after {
+    content: '';
+    position: fixed;
+    bottom: -30%;
+    right: -20%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+// Animated background decorations
+.home-bg-decor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  
+  &--1 {
+    top: 5%;
+    left: 5%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.2) 0%, transparent 60%);
+    filter: blur(60px);
+  }
+  
+  &--2 {
+    bottom: 10%;
+    right: 5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.15) 0%, transparent 60%);
+    filter: blur(80px);
+  }
+}
+
+.bg-line {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba($color-accent-gold, 0.6), transparent);
+  
+  &--1 {
+    top: 25%;
+    left: 0;
+    width: 30%;
+    transform-origin: left;
+  }
+  
+  &--2 {
+    bottom: 20%;
+    right: 0;
+    width: 25%;
+    transform-origin: right;
+  }
+}
+
+.bg-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba($color-accent-gold, 0.2);
+  
+  &--1 {
+    top: 15%;
+    right: 10%;
+    width: 250px;
+    height: 250px;
+    border-style: dashed;
+  }
 }
 
 .hero {
@@ -33,6 +139,17 @@
     );
     padding: $spacing-4xl;
     border-radius: 50%;
+    
+    // Simplified background for mobile to prevent glitching
+    @media (max-width: 768px) {
+      background: radial-gradient(
+        ellipse at center,
+        rgba($color-bg-primary, 0.95) 0%,
+        rgba($color-bg-primary, 0.8) 60%,
+        transparent 100%
+      );
+      padding: $spacing-2xl;
+    }
   }
   
   &__social {
@@ -127,6 +244,14 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: fluidGradient 6s ease infinite;
+      
+      // Simplified for mobile - disable complex animations
+      @media (max-width: 768px) {
+        will-change: auto;
+        animation: none;
+        background: $color-accent-gold;
+        -webkit-text-fill-color: transparent;
+      }
     }
   }
   
@@ -160,31 +285,7 @@
   }
 }
 
-// Reactive orbs that follow mouse
-.reactive-orb {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  filter: blur(60px);
-  opacity: 0.6;
-  z-index: 1;
-  
-  &--1 {
-    width: 500px;
-    height: 500px;
-    top: 20%;
-    left: 20%;
-    background: radial-gradient(circle, $color-accent-gold 0%, transparent 60%);
-  }
-  
-  &--2 {
-    width: 400px;
-    height: 400px;
-    bottom: 20%;
-    right: 20%;
-    background: radial-gradient(circle, rgba($color-accent-gold, 0.8) 0%, transparent 60%);
-  }
-}
+
 
 @keyframes fluidGradient {
   0%, 100% {
@@ -235,4 +336,24 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+// Water ripple animation for buttons
+@keyframes waterRipple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-btn {
+  position: relative;
+  overflow: hidden;
 }
