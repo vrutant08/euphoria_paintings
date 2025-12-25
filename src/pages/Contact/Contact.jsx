@@ -1,8 +1,49 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { artistInfo, projectTypes } from '../../data/artworks'
 import './Contact.scss'
+
+// Floating particles component - memoized to prevent re-renders on mouse move
+const FloatingParticles = memo(() => {
+  const particles = Array.from({ length: 25 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 10 + 6,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: Math.random() * 10 + 6,
+    delay: Math.random() * 3
+  }))
+  
+  return (
+    <div className="floating-particles">
+      {particles.map((particle) => (
+        <motion.div
+          key={particle.id}
+          className="particle"
+          style={{
+            width: particle.size,
+            height: particle.size,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
+          animate={{
+            y: [0, -70, 0],
+            x: [0, 35, -35, 0],
+            opacity: [0.4, 0.9, 0.4],
+            scale: [1, 1.5, 1]
+          }}
+          transition={{
+            duration: particle.duration,
+            repeat: Infinity,
+            delay: particle.delay,
+            ease: "easeInOut"
+          }}
+        />
+      ))}
+    </div>
+  )
+})
 
 // Animated input field with floating label
 const AnimatedInput = ({ label, ...props }) => {
@@ -92,6 +133,9 @@ const Contact = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Floating Particles */}
+      <FloatingParticles />
+      
       {/* Animated background decorations */}
       <div className="contact-bg-decor">
         <motion.div 

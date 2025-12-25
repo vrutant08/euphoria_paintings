@@ -1,5 +1,28 @@
 @use '../../styles/variables' as *;
 
+// Floating particles
+.floating-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+  
+  .particle {
+    position: absolute;
+    background: radial-gradient(circle, rgba($color-accent-gold, 1) 0%, rgba($color-accent-gold, 0.6) 40%, transparent 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba($color-accent-gold, 0.8), 0 0 30px rgba($color-accent-gold, 0.4);
+  }
+}
+
 .contact {
   min-height: 100vh;
   background: $color-bg-primary;

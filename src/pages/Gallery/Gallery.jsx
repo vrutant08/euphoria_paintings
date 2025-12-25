@@ -102,7 +102,7 @@ const FloatingParticles = memo(() => {
     size: Math.random() * 10 + 6, // Bigger particles (6-16px)
     x: Math.random() * 100,
     y: Math.random() * 100,
-    duration: Math.random() * 15 + 10,
+    duration: Math.random() * 10 + 6, // Faster: 6-16s instead of 10-25s
     delay: Math.random() * 3
   }))
   
@@ -119,8 +119,8 @@ const FloatingParticles = memo(() => {
             top: `${particle.y}%`,
           }}
           animate={{
-            y: [0, -50, 0],
-            x: [0, 25, -25, 0],
+            y: [0, -70, 0],
+            x: [0, 35, -35, 0],
             opacity: [0.4, 0.9, 0.4],
             scale: [1, 1.5, 1]
           }}

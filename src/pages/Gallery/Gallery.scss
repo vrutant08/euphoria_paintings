@@ -176,16 +176,16 @@
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: $spacing-2xl;
+  gap: $spacing-3xl;
   
   @include responsive(sm) {
     grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-2xl;
+    gap: $spacing-3xl;
   }
   
   @include responsive(lg) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: $spacing-3xl;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-4xl;
   }
 }
 
@@ -199,14 +199,18 @@
     overflow: hidden;
     border-radius: $border-radius-lg;
     background: $color-bg-secondary;
-    min-height: 400px;
+    min-height: 350px;
     
-    @include responsive(md) {
+    @include responsive(sm) {
       min-height: 450px;
     }
     
+    @include responsive(md) {
+      min-height: 550px;
+    }
+    
     @include responsive(lg) {
-      min-height: 500px;
+      min-height: 600px;
     }
     
     img {
