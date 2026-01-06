@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { artistInfo, projectTypes } from '../../data/artworks'
+import { submitContactForm } from '../../services/contactService'
 import './Contact.scss'
 
 // Floating particles component - memoized to prevent re-renders on mouse move
@@ -117,11 +118,16 @@ const Contact = () => {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simulate API call - Replace with actual backend
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // Submit to backend
+    const { success, error } = await submitContactForm(formData)
     
-    console.log('Contact Form:', formData)
-    setSubmitted(true)
+    if (success) {
+      setSubmitted(true)
+    } else {
+      console.error('Error submitting form:', error)
+      // You could add error state handling here
+    }
+    
     setIsSubmitting(false)
   }
 

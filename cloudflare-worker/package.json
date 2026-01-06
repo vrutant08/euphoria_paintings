@@ -1,0 +1,13 @@
+{
+  "name": "euphoria-paintings-worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "secrets": "echo 'Run: wrangler secret put R2_PUBLIC_HASH'"
+  },
+  "devDependencies": {
+    "wrangler": "^4.54.0"
+  }
+}

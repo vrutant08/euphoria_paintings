@@ -1,0 +1,14 @@
+name = "euphoria-paintings-api"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://euphoria-paintings.vercel.app,http://localhost:5173"
+
+# These will be set via `wrangler secret put` command - NEVER commit them
+# R2_ACCESS_KEY_ID = "set via wrangler secret"
+# R2_SECRET_ACCESS_KEY = "set via wrangler secret"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "euphoria-paintings"

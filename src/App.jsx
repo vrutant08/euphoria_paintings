@@ -7,6 +7,7 @@ import Home from './pages/Home/Home'
 import Gallery from './pages/Gallery/Gallery'
 import About from './pages/About/About'
 import Contact from './pages/Contact/Contact'
+import Studio from './pages/Studio/Studio'
 
 // Components
 import Navigation from './components/Navigation/Navigation'
@@ -25,6 +26,8 @@ function AnimatedRoutes({ setCommissionOpen }) {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        {/* Secret admin route - only Jasmine knows this URL */}
+        <Route path="/jasmine-studio" element={<Studio />} />
       </Routes>
     </AnimatePresence>
   )

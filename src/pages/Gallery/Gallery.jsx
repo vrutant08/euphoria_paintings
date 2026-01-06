@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
-import { artworks, categories } from '../../data/artworks'
+import { useArtworks, useCategories } from '../../hooks'
+import { categories as defaultCategories } from '../../data/artworks'
 import './Gallery.scss'
 
 // Magnetic button component
@@ -145,9 +146,14 @@ const Gallery = () => {
   const galleryRef = useRef(null)
   const navigate = useNavigate()
 
-  const filteredArtworks = activeCategory === 'all' 
-    ? artworks 
-    : artworks.filter(art => art.category === activeCategory)
+  // Fetch artworks from backend
+  const { artworks, loading, error } = useArtworks({ category: activeCategory })
+  const { categories } = useCategories()
+  
+  // Use fetched categories or fallback to defaults
+  const displayCategories = categories.length > 1 ? categories : defaultCategories
+
+  const filteredArtworks = artworks || []
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -304,22 +310,28 @@ const Gallery = () => {
 
         {/* Category Filter */}
         <nav className="gallery-filter">
-          {categories.map(cat => (
-            <button
-              key={cat.id}
-              className={`filter-btn ${activeCategory === cat.id ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat.id)}
-            >
-              {cat.label}
-              {activeCategory === cat.id && (
-                <motion.span
-                  className="filter-underline"
-                  layoutId="filterUnderline"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-            </button>
-          ))}
+          {displayCategories.map(cat => {
+            // Handle both object format and string format
+            const catId = typeof cat === 'object' ? cat.id : cat
+            const catLabel = typeof cat === 'object' ? cat.label : cat.charAt(0).toUpperCase() + cat.slice(1)
+            
+            return (
+              <button
+                key={catId}
+                className={`filter-btn ${activeCategory === catId ? 'active' : ''}`}
+                onClick={() => setActiveCategory(catId)}
+              >
+                {catLabel}
+                {activeCategory === catId && (
+                  <motion.span
+                    className="filter-underline"
+                    layoutId="filterUnderline"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </button>
+            )
+          })}
         </nav>
 
         {/* Gallery Grid */}
