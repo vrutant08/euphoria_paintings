@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { uploadImage, deleteImage } from '../../services/storageService'
 import { createArtwork, fetchArtworks, deleteArtwork, updateArtwork } from '../../services/artworkService'
+import { fetchAboutData, updateAboutData } from '../../services/settingsService'
 import './Studio.scss'
 
 // Password stored in environment variable for security
@@ -19,7 +20,7 @@ const Studio = () => {
   const [activeTab, setActiveTab] = useState('upload')
   const [editingArtwork, setEditingArtwork] = useState(null)
   
-  // Form state
+  // Form state for artwork
   const [formData, setFormData] = useState({
     title: '',
     category: 'portraits',
@@ -33,6 +34,22 @@ const Studio = () => {
   const [previewUrl, setPreviewUrl] = useState('')
   const [dragActive, setDragActive] = useState(false)
 
+  // About page state
+  const [aboutData, setAboutData] = useState({
+    name: '',
+    tagline: '',
+    subtitle: '',
+    bio: ['', ''],
+    profileImage: '',
+    profileImageFilename: '',
+    exhibitions: [{ year: '', name: '', location: '' }],
+    tools: [],
+    social: { instagram: '', artstation: '' }
+  })
+  const [aboutProfileFile, setAboutProfileFile] = useState(null)
+  const [aboutProfilePreview, setAboutProfilePreview] = useState('')
+  const [savingAbout, setSavingAbout] = useState(false)
+
   // Check for saved session
   useEffect(() => {
     const savedAuth = sessionStorage.getItem('euphoria_studio_auth')
@@ -44,8 +61,35 @@ const Studio = () => {
   useEffect(() => {
     if (isAuthenticated) {
       loadArtworks()
+      loadAboutData()
     }
   }, [isAuthenticated])
+
+  // Load About data
+  const loadAboutData = async () => {
+    const { data, error } = await fetchAboutData()
+    if (data) {
+      setAboutData({
+        name: data.name || '',
+        tagline: data.tagline || '',
+        subtitle: data.subtitle || '',
+        bio: data.bio || ['', ''],
+        profileImage: data.profileImage || '',
+        profileImageFilename: data.profileImageFilename || '',
+        exhibitions: data.exhibitions?.length > 0 
+          ? data.exhibitions 
+          : [{ year: '', name: '', location: '' }],
+        tools: data.tools || [],
+        social: {
+          instagram: data.social?.instagram || '',
+          artstation: data.social?.artstation || ''
+        }
+      })
+      if (data.profileImage) {
+        setAboutProfilePreview(data.profileImage)
+      }
+    }
+  }
 
   // Auto-dismiss messages
   useEffect(() => {
@@ -266,6 +310,56 @@ const Studio = () => {
   }
 
   // ===============================
+  // ABOUT PAGE HANDLERS
+  // ===============================
+  const handleAboutProfileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setAboutProfileFile(file)
+      setAboutProfilePreview(URL.createObjectURL(file))
+    }
+  }
+
+  const handleAboutSubmit = async (e) => {
+    e.preventDefault()
+    setSavingAbout(true)
+    setMessage({ type: '', text: '' })
+
+    try {
+      let profileImageUrl = aboutData.profileImage
+
+      // Upload new profile image if selected
+      if (aboutProfileFile) {
+        const uploadResult = await uploadImage(aboutProfileFile, 'about')
+        
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.error || 'Failed to upload profile image')
+        }
+
+        profileImageUrl = uploadResult.url
+      }
+
+      // Update about data
+      const result = await updateAboutData({
+        ...aboutData,
+        profileImage: profileImageUrl
+      })
+
+      if (result.error) {
+        throw new Error(result.error)
+      }
+
+      setAboutData({ ...aboutData, profileImage: profileImageUrl })
+      setAboutProfileFile(null)
+      setMessage({ type: 'success', text: 'About page updated successfully!' })
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to update about page: ' + error.message })
+    } finally {
+      setSavingAbout(false)
+    }
+  }
+
+  // ===============================
   // LOGIN SCREEN
   // ===============================
   if (!isAuthenticated) {
@@ -457,18 +551,29 @@ const Studio = () => {
           </svg>
           Manage ({artworks.length})
         </button>
+        <button 
+          className={`tab ${activeTab === 'about' ? 'active' : ''}`}
+          onClick={() => setActiveTab('about')}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          About Page
+        </button>
       </div>
 
       {/* Content */}
       <div className="studio-content">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           {activeTab === 'upload' ? (
             <motion.section 
               key="upload"
               className="upload-section"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
             >
               <form onSubmit={handleSubmit} className="upload-form">
                 {/* Image Upload Area */}
@@ -664,13 +769,14 @@ const Studio = () => {
                 </div>
               </form>
             </motion.section>
-          ) : (
+          ) : activeTab === 'manage' ? (
             <motion.section 
               key="manage"
               className="manage-section"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
             >
               {loading ? (
                 <div className="loading-state">
@@ -756,7 +862,247 @@ const Studio = () => {
                 </div>
               )}
             </motion.section>
-          )}
+          ) : activeTab === 'about' ? (
+            <motion.section 
+              key="about"
+              className="about-section"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <form onSubmit={handleAboutSubmit} className="about-form">
+                <h2 className="section-title">Edit About Page</h2>
+                
+                {/* Profile Image */}
+                <div className="about-form-group">
+                  <label>Profile Photo</label>
+                  <div className="profile-image-upload">
+                    <div className="profile-preview">
+                      {aboutProfilePreview ? (
+                        <img src={aboutProfilePreview} alt="Profile" />
+                      ) : (
+                        <div className="no-image">👤</div>
+                      )}
+                    </div>
+                    <div className="profile-actions">
+                      <label className="upload-btn">
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={handleAboutProfileChange}
+                          hidden
+                        />
+                        Choose Photo
+                      </label>
+                      {aboutProfilePreview && (
+                        <button 
+                          type="button" 
+                          className="remove-btn"
+                          onClick={() => { setAboutProfileFile(null); setAboutProfilePreview(''); }}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Name */}
+                <div className="about-form-group">
+                  <label>Artist Name</label>
+                  <input
+                    type="text"
+                    value={aboutData.name}
+                    onChange={(e) => setAboutData({ ...aboutData, name: e.target.value })}
+                    placeholder="Jasmine Konsoula"
+                  />
+                </div>
+
+                {/* Tagline */}
+                <div className="about-form-group">
+                  <label>Tagline</label>
+                  <input
+                    type="text"
+                    value={aboutData.tagline}
+                    onChange={(e) => setAboutData({ ...aboutData, tagline: e.target.value })}
+                    placeholder="Visual Poetry"
+                  />
+                </div>
+
+                {/* Subtitle */}
+                <div className="about-form-group">
+                  <label>Subtitle</label>
+                  <input
+                    type="text"
+                    value={aboutData.subtitle}
+                    onChange={(e) => setAboutData({ ...aboutData, subtitle: e.target.value })}
+                    placeholder="Exploring the ethereal boundary..."
+                  />
+                </div>
+
+                {/* Bio Paragraphs */}
+                <div className="about-form-group">
+                  <label>Bio (Paragraph 1)</label>
+                  <textarea
+                    value={aboutData.bio[0] || ''}
+                    onChange={(e) => {
+                      const newBio = [...aboutData.bio]
+                      newBio[0] = e.target.value
+                      setAboutData({ ...aboutData, bio: newBio })
+                    }}
+                    placeholder="First paragraph about yourself..."
+                    rows={4}
+                  />
+                </div>
+
+                <div className="about-form-group">
+                  <label>Bio (Paragraph 2)</label>
+                  <textarea
+                    value={aboutData.bio[1] || ''}
+                    onChange={(e) => {
+                      const newBio = [...aboutData.bio]
+                      newBio[1] = e.target.value
+                      setAboutData({ ...aboutData, bio: newBio })
+                    }}
+                    placeholder="Second paragraph about yourself..."
+                    rows={4}
+                  />
+                </div>
+
+                {/* Tools */}
+                <div className="about-form-group">
+                  <label>Tools (comma separated)</label>
+                  <input
+                    type="text"
+                    value={aboutData.tools?.join(', ') || ''}
+                    onChange={(e) => setAboutData({ 
+                      ...aboutData, 
+                      tools: e.target.value.split(',').map(t => t.trim()).filter(t => t)
+                    })}
+                    placeholder="Procreate, Photoshop, Traditional Oil"
+                  />
+                </div>
+
+                {/* Social Links */}
+                <div className="about-form-row">
+                  <div className="about-form-group">
+                    <label>Instagram URL</label>
+                    <input
+                      type="url"
+                      value={aboutData.social?.instagram || ''}
+                      onChange={(e) => setAboutData({ 
+                        ...aboutData, 
+                        social: { ...aboutData.social, instagram: e.target.value }
+                      })}
+                      placeholder="https://instagram.com/..."
+                    />
+                  </div>
+                  <div className="about-form-group">
+                    <label>ArtStation URL</label>
+                    <input
+                      type="url"
+                      value={aboutData.social?.artstation || ''}
+                      onChange={(e) => setAboutData({ 
+                        ...aboutData, 
+                        social: { ...aboutData.social, artstation: e.target.value }
+                      })}
+                      placeholder="https://artstation.com/..."
+                    />
+                  </div>
+                </div>
+
+                {/* Exhibitions */}
+                <div className="about-form-group">
+                  <label>Exhibitions</label>
+                  <div className="exhibitions-list">
+                    {aboutData.exhibitions?.map((exhibition, index) => (
+                      <div key={index} className="exhibition-row">
+                        <input
+                          type="text"
+                          value={exhibition.year || ''}
+                          onChange={(e) => {
+                            const newExhibitions = [...aboutData.exhibitions]
+                            newExhibitions[index] = { ...exhibition, year: e.target.value }
+                            setAboutData({ ...aboutData, exhibitions: newExhibitions })
+                          }}
+                          placeholder="Year"
+                          className="year-input"
+                        />
+                        <input
+                          type="text"
+                          value={exhibition.name || ''}
+                          onChange={(e) => {
+                            const newExhibitions = [...aboutData.exhibitions]
+                            newExhibitions[index] = { ...exhibition, name: e.target.value }
+                            setAboutData({ ...aboutData, exhibitions: newExhibitions })
+                          }}
+                          placeholder="Exhibition Name"
+                        />
+                        <input
+                          type="text"
+                          value={exhibition.location || ''}
+                          onChange={(e) => {
+                            const newExhibitions = [...aboutData.exhibitions]
+                            newExhibitions[index] = { ...exhibition, location: e.target.value }
+                            setAboutData({ ...aboutData, exhibitions: newExhibitions })
+                          }}
+                          placeholder="Location"
+                        />
+                        <button
+                          type="button"
+                          className="remove-exhibition"
+                          onClick={() => {
+                            const newExhibitions = aboutData.exhibitions.filter((_, i) => i !== index)
+                            setAboutData({ ...aboutData, exhibitions: newExhibitions })
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      className="add-exhibition"
+                      onClick={() => setAboutData({ 
+                        ...aboutData, 
+                        exhibitions: [...(aboutData.exhibitions || []), { year: '', name: '', location: '' }]
+                      })}
+                    >
+                      + Add Exhibition
+                    </button>
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <div className="form-actions">
+                  <motion.button 
+                    type="submit"
+                    className="btn-primary"
+                    disabled={savingAbout}
+                    whileHover={{ scale: savingAbout ? 1 : 1.02 }}
+                    whileTap={{ scale: savingAbout ? 1 : 0.98 }}
+                  >
+                    {savingAbout ? (
+                      <>
+                        <div className="spinner" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                          <polyline points="17 21 17 13 7 13 7 21"/>
+                          <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        <span>Save Changes</span>
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              </form>
+            </motion.section>
+          ) : null}
         </AnimatePresence>
       </div>
     </motion.div>

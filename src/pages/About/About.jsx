@@ -2,7 +2,8 @@ import { useRef, useEffect, useState, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
-import { artistInfo } from '../../data/artworks'
+import { fetchAboutData } from '../../services/settingsService'
+import { artistInfo as defaultArtistInfo } from '../../data/artworks'
 import './About.scss'
 
 // Floating particles component - memoized to prevent re-renders on mouse move
@@ -81,6 +82,20 @@ const About = () => {
   const aboutRef = useRef(null)
   const navigate = useNavigate()
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [artistInfo, setArtistInfo] = useState(defaultArtistInfo)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Fetch about data from Supabase
+  useEffect(() => {
+    const loadAboutData = async () => {
+      const { data, error } = await fetchAboutData()
+      if (data) {
+        setArtistInfo(data)
+      }
+      setIsLoading(false)
+    }
+    loadAboutData()
+  }, [])
   
   // Track mouse for reactive elements
   useEffect(() => {
@@ -183,8 +198,8 @@ const About = () => {
           {/* Image Section */}
           <div className="about-image">
             <ParallaxImage 
-              src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&h=1000&fit=crop" 
-              alt="Jasmine Konsoula - Artist"
+              src={artistInfo.profileImage || "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&h=1000&fit=crop"} 
+              alt={`${artistInfo.name} - Artist`}
             />
           </div>
 

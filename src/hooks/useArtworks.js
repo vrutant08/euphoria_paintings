@@ -5,6 +5,16 @@
 import { useState, useEffect, useCallback } from 'react'
 import { fetchArtworks, fetchArtworkById, fetchCategories } from '../services/artworkService'
 
+// Transform artwork data to match frontend expected format
+const transformArtwork = (artwork) => {
+  if (!artwork) return null
+  return {
+    ...artwork,
+    // Map database field to frontend field
+    image: artwork.image_url || artwork.image || null,
+  }
+}
+
 export const useArtworks = (options = {}) => {
   const [artworks, setArtworks] = useState([])
   const [loading, setLoading] = useState(true)
@@ -19,7 +29,9 @@ export const useArtworks = (options = {}) => {
     if (fetchError) {
       setError(fetchError)
     } else {
-      setArtworks(data || [])
+      // Transform each artwork to include 'image' field
+      const transformedData = (data || []).map(transformArtwork)
+      setArtworks(transformedData)
     }
     
     setLoading(false)
@@ -47,7 +59,8 @@ export const useArtwork = (id) => {
       if (fetchError) {
         setError(fetchError)
       } else {
-        setArtwork(data)
+        // Transform artwork to include 'image' field
+        setArtwork(transformArtwork(data))
       }
       
       setLoading(false)
