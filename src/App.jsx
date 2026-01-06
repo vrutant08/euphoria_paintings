@@ -20,7 +20,7 @@ function AnimatedRoutes({ setCommissionOpen }) {
   const location = useLocation()
   
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home setCommissionOpen={setCommissionOpen} />} />
         <Route path="/gallery" element={<Gallery />} />

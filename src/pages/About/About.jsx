@@ -87,14 +87,32 @@ const About = () => {
 
   // Fetch about data from Supabase
   useEffect(() => {
+    let isMounted = true
+    
     const loadAboutData = async () => {
-      const { data, error } = await fetchAboutData()
-      if (data) {
-        setArtistInfo(data)
+      try {
+        const { data, error } = await fetchAboutData()
+        if (isMounted && data) {
+          setArtistInfo(data)
+        }
+      } catch (err) {
+        console.error('Error loading about data:', err)
+      } finally {
+        if (isMounted) setIsLoading(false)
       }
-      setIsLoading(false)
     }
+    
     loadAboutData()
+    
+    // Safety timeout - ensure loading always completes
+    const timeout = setTimeout(() => {
+      if (isMounted) setIsLoading(false)
+    }, 3000)
+    
+    return () => {
+      isMounted = false
+      clearTimeout(timeout)
+    }
   }, [])
   
   // Track mouse for reactive elements

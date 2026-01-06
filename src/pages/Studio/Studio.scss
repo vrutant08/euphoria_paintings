@@ -1,4 +1,5 @@
 @use '../../styles/variables' as *;
+@use 'sass:color';
 
 // ===============================
 // STUDIO LOGIN
@@ -179,6 +180,11 @@
   min-height: 100vh;
   background: $color-bg-primary;
   color: $color-text-primary;
+  padding-top: 100px; // Account for fixed navigation
+
+  @media (max-width: 768px) {
+    padding-top: 80px;
+  }
 }
 
 // Header
@@ -190,9 +196,8 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: relative; // Changed from sticky to relative
+  z-index: 50; // Below main navigation
 
   @media (max-width: 768px) {
     padding: 15px 20px;
@@ -1152,7 +1157,7 @@
       justify-content: center;
       gap: 10px;
       padding: 16px 32px;
-      background: linear-gradient(135deg, $color-accent-gold 0%, darken($color-accent-gold, 10%) 100%);
+      background: linear-gradient(135deg, $color-accent-gold 0%, color.adjust($color-accent-gold, $lightness: -10%) 100%);
       border: none;
       border-radius: 12px;
       color: #000;
