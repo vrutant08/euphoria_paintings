@@ -6,39 +6,40 @@ import { submitContactForm } from '../../services/contactService'
 import './Contact.scss'
 
 // Floating particles component - memoized to prevent re-renders on mouse move
+// Using CSS animations instead of framer-motion for better mobile performance
 const FloatingParticles = memo(() => {
-  const particles = Array.from({ length: 25 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 10 + 6,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    duration: Math.random() * 10 + 6,
-    delay: Math.random() * 3
-  }))
+  // Create particles distributed across the visible screen
+  const particles = Array.from({ length: 25 }, (_, i) => {
+    const gridX = (i % 5) * 20 + Math.random() * 8 - 4
+    const gridY = Math.floor(i / 5) * 20 + Math.random() * 12
+    const variant = (i % 3) + 1
+    
+    return {
+      id: i,
+      size: Math.random() * 10 + 6,
+      x: Math.max(3, Math.min(97, gridX)),
+      y: Math.max(5, Math.min(95, gridY)),
+      driftDuration: Math.random() * 15 + 12,
+      glowDuration: Math.random() * 4 + 3,
+      driftOffset: Math.random() * -15,
+      glowOffset: Math.random() * -5,
+      variant
+    }
+  })
   
   return (
     <div className="floating-particles">
       {particles.map((particle) => (
-        <motion.div
+        <div
           key={particle.id}
-          className="particle"
+          className={`particle variant-${particle.variant}`}
           style={{
             width: particle.size,
             height: particle.size,
             left: `${particle.x}%`,
             top: `${particle.y}%`,
-          }}
-          animate={{
-            y: [0, -70, 0],
-            x: [0, 35, -35, 0],
-            opacity: [0.4, 0.9, 0.4],
-            scale: [1, 1.5, 1]
-          }}
-          transition={{
-            duration: particle.duration,
-            repeat: Infinity,
-            delay: particle.delay,
-            ease: "easeInOut"
+            animationDuration: `${particle.driftDuration}s, ${particle.glowDuration}s`,
+            animationDelay: `${particle.driftOffset}s, ${particle.glowOffset}s`,
           }}
         />
       ))}

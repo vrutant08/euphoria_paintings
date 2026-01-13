@@ -155,12 +155,22 @@
       left: $spacing-2xl;
     }
     
+    @media (max-width: 768px) {
+      bottom: $spacing-lg;
+      left: $spacing-md;
+      gap: $spacing-md;
+    }
+    
     a {
       font-size: $font-size-xs;
       font-weight: 500;
       letter-spacing: 0.1em;
       color: $color-text-muted;
       transition: color $transition-base;
+      
+      @media (max-width: 768px) {
+        font-size: 0.65rem;
+      }
       
       &:hover {
         color: $color-text-primary;
@@ -180,6 +190,11 @@
       right: $spacing-2xl;
     }
     
+    @media (max-width: 768px) {
+      bottom: $spacing-lg;
+      right: $spacing-md;
+    }
+    
     .label {
       display: block;
       font-size: $font-size-xs;
@@ -197,6 +212,11 @@
       border: none;
       padding: 0;
       transition: color $transition-base;
+      cursor: pointer;
+      
+      @media (max-width: 768px) {
+        font-size: 0.75rem;
+      }
       
       &:hover {
         color: #7df3a8;

@@ -73,7 +73,7 @@
   }
 }
 
-// Floating particles
+// Floating particles - smooth CSS animations
 .floating-particles {
   position: fixed;
   top: 0;
@@ -86,14 +86,77 @@
   
   .particle {
     position: absolute;
-    background: radial-gradient(circle, rgba($color-accent-gold, 1) 0%, rgba($color-accent-gold, 0.6) 40%, transparent 70%);
+    background: radial-gradient(circle, rgba($color-accent-gold, 0.9) 0%, rgba($color-accent-gold, 0.4) 50%, transparent 70%);
     border-radius: 50%;
-    box-shadow: 0 0 15px rgba($color-accent-gold, 0.8), 0 0 30px rgba($color-accent-gold, 0.4);
+    will-change: transform, opacity;
+    opacity: 0.5;
+    box-shadow: 0 0 12px rgba($color-accent-gold, 0.6), 0 0 24px rgba($color-accent-gold, 0.3);
+    
+    &.variant-1 {
+      animation: drift1 ease-in-out infinite, glowSmooth1 ease-in-out infinite;
+    }
+    &.variant-2 {
+      animation: drift2 ease-in-out infinite, glowSmooth2 ease-in-out infinite;
+    }
+    &.variant-3 {
+      animation: drift3 ease-in-out infinite, glowSmooth3 ease-in-out infinite;
+    }
     
     @media (max-width: 768px) {
-      box-shadow: 0 0 8px rgba($color-accent-gold, 0.6);
+      &.variant-1, &.variant-2, &.variant-3 {
+        animation: driftMobile ease-in-out infinite, glowMobile ease-in-out infinite;
+      }
     }
   }
+}
+
+// Gentle drift animations - particles move slightly and return
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(15px, -20px) scale(1.1); }
+  50% { transform: translate(-10px, -35px) scale(1.05); }
+  75% { transform: translate(-20px, -15px) scale(0.95); }
+}
+
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20% { transform: translate(-25px, 10px) scale(1.15); }
+  40% { transform: translate(-15px, -25px) scale(1); }
+  60% { transform: translate(20px, -20px) scale(1.1); }
+  80% { transform: translate(10px, 5px) scale(0.9); }
+}
+
+@keyframes drift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, 25px) scale(1.2); }
+  66% { transform: translate(-15px, 10px) scale(0.95); }
+}
+
+// Smooth glow transitions
+@keyframes glowSmooth1 {
+  0%, 100% { opacity: 0.4; box-shadow: 0 0 10px rgba($color-accent-gold, 0.5), 0 0 20px rgba($color-accent-gold, 0.25); }
+  50% { opacity: 0.75; box-shadow: 0 0 18px rgba($color-accent-gold, 0.8), 0 0 35px rgba($color-accent-gold, 0.45); }
+}
+
+@keyframes glowSmooth2 {
+  0%, 100% { opacity: 0.35; box-shadow: 0 0 8px rgba($color-accent-gold, 0.4), 0 0 16px rgba($color-accent-gold, 0.2); }
+  50% { opacity: 0.7; box-shadow: 0 0 15px rgba($color-accent-gold, 0.7), 0 0 30px rgba($color-accent-gold, 0.4); }
+}
+
+@keyframes glowSmooth3 {
+  0%, 100% { opacity: 0.45; box-shadow: 0 0 12px rgba($color-accent-gold, 0.55), 0 0 24px rgba($color-accent-gold, 0.3); }
+  50% { opacity: 0.8; box-shadow: 0 0 20px rgba($color-accent-gold, 0.85), 0 0 40px rgba($color-accent-gold, 0.5); }
+}
+
+// Mobile - simpler animations
+@keyframes driftMobile {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(10px, -15px) scale(1.1); }
+}
+
+@keyframes glowMobile {
+  0%, 100% { opacity: 0.4; box-shadow: 0 0 8px rgba($color-accent-gold, 0.5); }
+  50% { opacity: 0.7; box-shadow: 0 0 14px rgba($color-accent-gold, 0.7); }
 }
 
 // Floating reactive shapes

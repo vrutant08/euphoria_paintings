@@ -434,6 +434,10 @@ const Studio = () => {
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </motion.button>
+
+            <button type="button" className="back-link" onClick={() => navigate('/')}>
+              ← Back to Gallery
+            </button>
           </form>
 
           <AnimatePresence>
@@ -448,10 +452,6 @@ const Studio = () => {
               </motion.p>
             )}
           </AnimatePresence>
-
-          <button className="back-link" onClick={() => navigate('/')}>
-            ← Back to Gallery
-          </button>
         </motion.div>
       </motion.div>
     )

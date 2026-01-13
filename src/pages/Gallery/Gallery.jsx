@@ -96,40 +96,42 @@ const Lightbox = ({ artwork, onClose }) => {
   )
 }
 
-// Floating particles component - memoized to prevent re-renders on mouse move
+// Floating particles component - uses CSS animations for better mobile performance
 const FloatingParticles = memo(() => {
-  const particles = Array.from({ length: 35 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 10 + 6, // Bigger particles (6-16px)
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    duration: Math.random() * 10 + 6, // Faster: 6-16s instead of 10-25s
-    delay: Math.random() * 3
-  }))
+  // Create particles distributed across the visible screen
+  const particles = Array.from({ length: 35 }, (_, i) => {
+    // Distribute particles evenly across the viewport
+    const gridX = (i % 7) * 14 + Math.random() * 8 - 4 // 7 columns spread across screen
+    const gridY = Math.floor(i / 7) * 20 + Math.random() * 12 // 5 rows
+    const variant = (i % 3) + 1 // Cycle through 3 variants
+    
+    return {
+      id: i,
+      size: Math.random() * 10 + 6, // 6-16px
+      x: Math.max(3, Math.min(97, gridX)), // Keep within bounds
+      y: Math.max(5, Math.min(95, gridY)), // Visible on screen
+      driftDuration: Math.random() * 15 + 12, // 12-27s for gentle drift
+      glowDuration: Math.random() * 4 + 3, // 3-7s for glow pulse
+      // Negative delay = start partway through animation (no waiting)
+      driftOffset: Math.random() * -15, // Start at random point in drift cycle
+      glowOffset: Math.random() * -5, // Start at random point in glow cycle
+      variant
+    }
+  })
   
   return (
     <div className="floating-particles">
       {particles.map((particle) => (
-        <motion.div
+        <div
           key={particle.id}
-          className="particle"
+          className={`particle variant-${particle.variant}`}
           style={{
             width: particle.size,
             height: particle.size,
             left: `${particle.x}%`,
             top: `${particle.y}%`,
-          }}
-          animate={{
-            y: [0, -70, 0],
-            x: [0, 35, -35, 0],
-            opacity: [0.4, 0.9, 0.4],
-            scale: [1, 1.5, 1]
-          }}
-          transition={{
-            duration: particle.duration,
-            repeat: Infinity,
-            delay: particle.delay,
-            ease: "easeInOut"
+            animationDuration: `${particle.driftDuration}s, ${particle.glowDuration}s`,
+            animationDelay: `${particle.driftOffset}s, ${particle.glowOffset}s`,
           }}
         />
       ))}
@@ -296,17 +298,21 @@ const Gallery = () => {
               2023 — 2025 Collection
             </motion.p>
           </div>
-          
-          <motion.button 
-            onClick={() => navigate('/')}
-            className="back-link"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="arrow">←</span>
-            <span>BACK</span>
-          </motion.button>
         </header>
+        
+        {/* Fixed Back Button - Bottom Right */}
+        <motion.button 
+          onClick={() => navigate('/')}
+          className="back-link"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className="arrow">←</span>
+          <span>BACK</span>
+        </motion.button>
 
         {/* Category Filter */}
         <nav className="gallery-filter">
