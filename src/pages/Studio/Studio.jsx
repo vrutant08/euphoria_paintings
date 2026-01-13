@@ -434,10 +434,6 @@ const Studio = () => {
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </motion.button>
-
-            <button type="button" className="back-link" onClick={() => navigate('/')}>
-              ← Back to Gallery
-            </button>
           </form>
 
           <AnimatePresence>
@@ -453,6 +449,20 @@ const Studio = () => {
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* Fixed Back Button - Bottom Right (same as other pages) */}
+        <motion.button 
+          onClick={() => navigate('/')}
+          className="back-link"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className="arrow">←</span>
+          <span>BACK</span>
+        </motion.button>
       </motion.div>
     )
   }

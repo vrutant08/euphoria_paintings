@@ -224,9 +224,12 @@
   position: fixed;
   bottom: $spacing-xl;
   right: $spacing-xl;
+  top: auto;
+  left: auto;
   z-index: 100;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: $spacing-sm;
   font-size: $font-size-sm;
   font-weight: 500;
@@ -237,6 +240,8 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: $border-radius-full;
   padding: $spacing-sm $spacing-lg;
+  height: auto;
+  width: auto;
   transition: all $transition-base;
   cursor: pointer;
   

@@ -159,25 +159,54 @@
         border: 1px solid rgba($color-success, 0.3);
       }
     }
+  }
 
-    .back-link {
-      margin-top: 55px;
-      margin-left: 25px;
-      background: transparent;
-      border: none;
-      color: $color-text-muted;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: color 0.2s;
-      display: block;
-      width: 100%;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-      padding: 12px 0;
+  // Fixed Back Button - Bottom Right (same as other pages)
+  .back-link {
+    position: fixed;
+    bottom: $spacing-xl;
+    right: $spacing-xl;
+    top: auto;
+    left: auto;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: $color-text-secondary;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $border-radius-full;
+    padding: $spacing-sm $spacing-lg;
+    height: auto;
+    width: auto;
+    transition: all $transition-base;
+    cursor: pointer;
 
-      &:hover {
-        color: $color-accent-gold;
+    @media (max-width: 768px) {
+      bottom: $spacing-lg;
+      right: $spacing-lg;
+      padding: $spacing-sm $spacing-md;
+      font-size: 0.8rem;
+    }
+
+    .arrow {
+      transition: transform $transition-base;
+    }
+
+    &:hover {
+      color: $color-text-primary;
+      background: rgba(0, 0, 0, 0.95);
+      border-color: $color-accent-gold;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($color-accent-gold, 0.3);
+
+      .arrow {
+        transform: translateX(-4px);
       }
     }
   }
